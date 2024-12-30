@@ -1,0 +1,81 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: openim
+
+configMapGenerator:
+- name: openim-config
+  files:
+  - discovery.yml=config/discovery.yml
+  - log.yml=config/log.yml
+  - mongodb.yml=config/mongodb.yml
+  - local-cache.yml=config/local-cache.yml
+  - openim-api.yml=config/openim-api.yml
+  - openim-rpc-user.yml=config/openim-rpc-user.yml
+  - openim-crontask.yml=config/openim-crontask.yml
+  - openim-msggateway.yml=config/openim-msggateway.yml
+  - openim-msgtransfer.yml=config/openim-msgtransfer.yml
+  - openim-push.yml=config/openim-push.yml
+  - openim-rpc-auth.yml=config/openim-rpc-auth.yml
+  - openim-rpc-conversation.yml=config/openim-rpc-conversation.yml
+  - openim-rpc-friend.yml=config/openim-rpc-friend.yml
+  - openim-rpc-group.yml=config/openim-rpc-group.yml
+  - openim-rpc-msg.yml=config/openim-rpc-msg.yml
+  - openim-rpc-third.yml=config/openim-rpc-third.yml
+  - share.yml=config/share.yml
+  - kafka.yml=config/kafka.yml
+  - redis.yml=config/redis.yml
+  - minio.yml=config/minio.yml
+  - notification.yml=config/notification.yml
+  - webhooks.yml=config/webhooks.yml
+  - prometheus.yml=config/prometheus.yml
+
+secretGenerator:
+  - name: openim-kafka-secret
+    literals:
+    - kafka-password=""
+  - name: openim-minio-secret
+    literals:
+    - minio-root-user=cm9vdA==            # Base64 encoded "root"
+    - minio-root-password=b3BlbklNMTIz    # Base64 encoded "openIM123"
+  - name: openim-mongo-secret
+    literals:
+    - mongo_openim_username=b3BlbklN      # base64 for "openIM", this user credentials need in authSource database.
+    - mongo_openim_password=b3BlbklNMTIz  # base64 for "openIM123"
+  - name: openim-redis-secret
+    literals:
+    - redis-password=b3BlbklNMTIz         # "openIM123" in base64
+
+resources:
+  - clusterRole.yml
+  - kafka-statefulset.yml
+  - kafka-service.yml
+  - minio-statefulset.yml
+  - minio-service.yml
+  - mongo-statefulset.yml
+  - mongo-service.yml
+  - redis-statefulset.yml
+  - redis-service.yml
+  - openim-api-deployment.yml
+  - openim-api-service.yml
+  - openim-crontask-deployment.yml
+  - openim-rpc-user-deployment.yml
+  - openim-rpc-user-service.yml
+  - openim-msggateway-deployment.yml
+  - openim-msggateway-service.yml
+  - openim-push-deployment.yml
+  - openim-push-service.yml
+  - openim-msgtransfer-service.yml
+  - openim-msgtransfer-deployment.yml
+  - openim-rpc-conversation-deployment.yml
+  - openim-rpc-conversation-service.yml
+  - openim-rpc-auth-deployment.yml
+  - openim-rpc-auth-service.yml
+  - openim-rpc-group-deployment.yml
+  - openim-rpc-group-service.yml
+  - openim-rpc-friend-deployment.yml
+  - openim-rpc-friend-service.yml
+  - openim-rpc-msg-deployment.yml
+  - openim-rpc-msg-service.yml
+  - openim-rpc-third-deployment.yml
+  - openim-rpc-third-service.yml
+  - ingress.yml
