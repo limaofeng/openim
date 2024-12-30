@@ -47,6 +47,8 @@ secretGenerator:
 
 resources:
   - clusterRole.yml
+  - etcd-statefulset.yml
+  - etcd-service.yml
   - kafka-statefulset.yml
   - kafka-service.yml
   - minio-statefulset.yml
