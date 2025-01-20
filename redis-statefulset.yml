@@ -4,7 +4,7 @@ metadata:
   name: redis-statefulset
 spec:
   serviceName: "redis"
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: redis
@@ -15,6 +15,7 @@ spec:
     spec:
       nodeSelector:
         node-role.kubernetes.io/worker: "true"
+        kubernetes.io/hostname: "k8s-home"
       containers:
         - name: redis
           image: redis:7.0.0
@@ -26,7 +27,7 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: redis-secret
+                  name: openim-redis-secret
                   key: redis-password
           volumeMounts:
             - name: redis-data
@@ -38,9 +39,6 @@ spec:
               'redis-server  --requirepass "$REDIS_PASSWORD" --appendonly yes',
             ]
       volumes:
-        - name: redis-config-volume
-          configMap:
-            name: openim-config
         - name: redis-data
           persistentVolumeClaim:
             claimName: redis-pvc
@@ -51,7 +49,8 @@ metadata:
   name: redis-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
+  volumeName: openim-redis-pv

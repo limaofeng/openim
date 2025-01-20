@@ -5,7 +5,7 @@ metadata:
   labels:
     app: minio
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: minio
@@ -16,12 +16,13 @@ spec:
     spec:
       nodeSelector:
         node-role.kubernetes.io/worker: "true"
+        kubernetes.io/hostname: "k8s-home"
       containers:
         - name: minio
           image: minio/minio:RELEASE.2024-01-11T07-46-16Z
           ports:
-            - containerPort: 9000 # MinIO service port
-            - containerPort: 9090 # MinIO console port
+            - containerPort: 9000         # MinIO service port
+            - containerPort: 9090         # MinIO console port
           volumeMounts:
             - name: minio-data
               mountPath: /data
@@ -61,10 +62,11 @@ metadata:
   name: minio-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
+  volumeName: openim-minio-pv
 
 ---
 apiVersion: v1
@@ -73,9 +75,10 @@ metadata:
   name: minio-config-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 2Gi
+  volumeName: openim-minio-config-pv
 
 

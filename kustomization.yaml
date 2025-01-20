@@ -28,35 +28,58 @@ configMapGenerator:
   - notification.yml=config/notification.yml
   - webhooks.yml=config/webhooks.yml
   - prometheus.yml=config/prometheus.yml
+- name: prometheus-config
+  files:
+  - instance-down-rules.yml=config/instance-down-rules.yml
+  - prometheus.yml=config/prometheus.yml
+- name: alertmanager-config
+  files:
+  - alertmanager.yml=config/alertmanager.yml
+  - email.tmpl=config/email.tmpl
 
 secretGenerator:
+  - name: openim-server-secret
+    literals:
+    - share-secret=openIM123
   - name: openim-kafka-secret
     literals:
     - kafka-password=""
   - name: openim-minio-secret
     literals:
-    - minio-root-user=cm9vdA==            # Base64 encoded "root"
-    - minio-root-password=b3BlbklNMTIz    # Base64 encoded "openIM123"
+    - minio-root-user=root                  # Base64 encoded "root"
+    - minio-root-password=openIM123         # Base64 encoded "openIM123"
+  - name: openim-mongo-init-secret
+    literals:
+    - mongo_initdb_root_username=root        # base64 for "root"
+    - mongo_initdb_root_password=openIM123   # base64 for "openIM123"
+    - mongo_initdb_database=openim_v3        # base64 for "openim_v3"
+    - mongo_openim_username=openIM           # base64 for "openIM"
+    - mongo_openim_password=openIM123        # base64 for "openIM123"
   - name: openim-mongo-secret
     literals:
-    - mongo_openim_username=b3BlbklN      # base64 for "openIM", this user credentials need in authSource database.
-    - mongo_openim_password=b3BlbklNMTIz  # base64 for "openIM123"
+    - mongo_openim_username=openIM            # base64 for "openIM", this user credentials need in authSource database.
+    - mongo_openim_password=openIM123         # base64 for "openIM123"
   - name: openim-redis-secret
     literals:
-    - redis-password=b3BlbklNMTIz         # "openIM123" in base64
+    - redis-password=openIM123                # "openIM123" in base64
 
 resources:
   - clusterRole.yml
-  - etcd-statefulset.yml
-  - etcd-service.yml
-  - kafka-statefulset.yml
-  - kafka-service.yml
-  - minio-statefulset.yml
-  - minio-service.yml
+  - openim-pv.yml
   - mongo-statefulset.yml
   - mongo-service.yml
   - redis-statefulset.yml
   - redis-service.yml
+  - kafka-statefulset.yml
+  - kafka-service.yml
+  - minio-statefulset.yml
+  - minio-service.yml
+  - prometheus-deployment.yml
+  - prometheus-service.yml
+  - alertmanager-deployment.yml
+  - alertmanager-service.yml
+  - grafana-deployment.yml
+  - grafana-service.yml
   - openim-api-deployment.yml
   - openim-api-service.yml
   - openim-crontask-deployment.yml

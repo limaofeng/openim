@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  labels:
+    app: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:v0.27.0
+          ports:
+            - containerPort: 9093
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/alertmanager/alertmanager.yml
+              subPath: alertmanager.yml
+            - name: template-volume
+              mountPath: /etc/alertmanager/email.tmpl
+              subPath: email.tmpl
+          args:
+            - '--config.file=/etc/alertmanager/alertmanager.yml'
+            - '--web.listen-address=:9093'
+      volumes:
+        - name: config-volume
+          configMap:
+            name: alertmanager-config
+        - name: template-volume
+          configMap:
+            name: alertmanager-config

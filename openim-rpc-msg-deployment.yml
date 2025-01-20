@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: msg-rpc-server
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: msg-rpc-server
@@ -12,8 +12,6 @@ spec:
       labels:
         app: msg-rpc-server
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/worker: "true"
       containers:
         - name: msg-rpc-server-container
           image: openim/openim-rpc-msg:v3.8.3-alpha.3-test1

@@ -14,4 +14,4 @@ spec:
       protocol: TCP
       port: 12002
       targetPort: 12002
-  type: NodePort
+  type: ClusterIP

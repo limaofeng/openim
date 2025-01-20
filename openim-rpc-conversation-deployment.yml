@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: conversation-rpc-server
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: conversation-rpc-server
@@ -12,8 +12,6 @@ spec:
       labels:
         app: conversation-rpc-server
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/worker: "true"
       containers:
         - name: conversation-rpc-server-container
           image: openim/openim-rpc-conversation:v3.8.3-alpha.3-test1

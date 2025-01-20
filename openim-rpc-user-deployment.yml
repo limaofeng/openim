@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: user-rpc-server
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: user-rpc-server
@@ -12,8 +12,6 @@ spec:
       labels:
         app: user-rpc-server
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/worker: "true"
       containers:
         - name: user-rpc-server-container
           image: openim/openim-rpc-user:v3.8.3-alpha.3-test1

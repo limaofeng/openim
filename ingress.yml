@@ -1,25 +1,46 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: im-asany-tls
+spec:
+  secretName: im-asany-tls
+  dnsNames:
+    - im.asany.cn
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: openim-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    external-dns.alpha.kubernetes.io/hostname: "im.asany.cn"
+    external-dns.alpha.kubernetes.io/target: 43.143.122.217
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  ingressClassName: openim-nginx
+  ingressClassName: nginx
   rules:
-    - http:
-        paths:
-          - path: /openim-api
-            pathType: Prefix
-            backend:
-              service:
-                name: openim-api-service
-                port:
-                  number: 10002
-          - path: /openim-msggateway
-            pathType: Prefix
-            backend:
-              service:
-                name: openim-msggateway-service
-                port:
-                  number: 10001
+  - host: im.asany.cn
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: openim-api-service
+            port:
+              number: 10002
+      - path: /msggateway(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: messagegateway-rpc-service
+            port:
+              number: 10001
+  tls:
+  - hosts:
+    - im.asany.cn
+    secretName: im-asany-tls

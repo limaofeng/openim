@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: openim-api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: openim-api
@@ -12,8 +12,6 @@ spec:
       labels:
         app: openim-api
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/worker: "true"
       containers:
         - name: openim-api-container
           image: openim/openim-api:v3.8.3-alpha.3-test1

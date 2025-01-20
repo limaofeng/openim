@@ -5,11 +5,11 @@ metadata:
   labels:
     app: kafka
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: kafka
-  serviceName: "kafka-service"
+  serviceName: "kafka"
   template:
     metadata:
       labels:
@@ -17,6 +17,7 @@ spec:
     spec:
       nodeSelector:
         node-role.kubernetes.io/worker: "true"
+        kubernetes.io/hostname: "k8s-home"
       containers:
         - name: kafka
           image: bitnami/kafka:3.5.1
@@ -39,11 +40,11 @@ spec:
             - name: KAFKA_CFG_PROCESS_ROLES
               value: "controller,broker"
             - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
-              value: "0@kafka-service:9093"
+              value: "0@kafka:9093"
             - name: KAFKA_CFG_LISTENERS
               value: "PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094"
             - name: KAFKA_CFG_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka-service:9092,EXTERNAL://kafka-service:19094"
+              value: "PLAINTEXT://kafka:9092,EXTERNAL://kafka:9094"
             - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
               value: "CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT"
             - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
@@ -66,7 +67,8 @@ metadata:
   name: kafka-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
+  volumeName: openim-kafka-pv

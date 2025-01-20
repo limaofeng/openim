@@ -1,12 +1,11 @@
-enable: etcd
-etcd:
-  rootDirectory: openim
-  address: [ localhost:12379 ]
-  username: ''
-  password: ''
-
+enable: "kubernetes" # "kubernetes" or "etcd"
 kubernetes:
   namespace: openim
+etcd:
+  rootDirectory: openim
+  address: [ etcd:2379 ]
+  username: ''
+  password: ''
 
 rpcService:
   user: user-rpc-service
