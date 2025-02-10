@@ -17,7 +17,7 @@ metadata:
   name: openim-ingress
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "im.asany.cn"
-    external-dns.alpha.kubernetes.io/target: 43.143.122.217
+    external-dns.alpha.kubernetes.io/target: 101.35.146.203
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
